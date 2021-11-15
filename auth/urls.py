@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import get_token
+from .views import get_first_token
 
-
-path('get_key/', get_token, name='get_key')
+urlpatterns = [
+    path('get_key/', get_first_token, name='get_first_token')
+]

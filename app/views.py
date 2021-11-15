@@ -9,13 +9,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-AMO_SECRET_KEY = 'c5k6Y0oDTImLBttZefrJq1NFInK0r6pWiPzCeUKeiZzURAnw7mIHAPXUXlzpg8sq'
-AMO_ID_INTEGRATION = '7d0b40b1-f8a2-4b88-b935-b43471e2f485'
-REDIRECT_URL_NGROK = "http://3e69-5-167-144-64.ngrok.io/"
-REDIRECT_URL_BASE = REDIRECT_URL_NGROK + "app/get_key/"
+AMO_SECRET_KEY = os.getenv("AMO_SECRET_KEY")
+AMO_ID_INTEGRATION = os.getenv("AMO_ID_INTEGRATION")
 ACCESS_TOKEN = os.getenv("access_token")
 REFRESH_TOKEN = os.getenv("refresh_token")
 EXPIRES_IN = os.getenv("expires_in")
+REDIRECT_URL_NGROK = "http://3e69-5-167-144-64.ngrok.io/"
+REDIRECT_URL_BASE = REDIRECT_URL_NGROK + "app/get_key/"
 HEADERS = {
     "Authorization": f"Bearer {ACCESS_TOKEN}",
     "Content-Type": "application/json",
@@ -41,7 +41,6 @@ def create_deal(request, user_id):
         data=data,
         headers=HEADERS,
     )
-    print('Deal created!')
 
 
 def get_contact(request):
@@ -95,11 +94,11 @@ def get_contact(request):
     try:
         r = response.json()
         user_id = r['_embedded']['contacts'][0]['id']
-        response = requests.patch(
-            'https://ncy61970.amocrm.ru//api/v4/contacts/{}'.format(id),
+        requests.patch(
+            'https://ncy61970.amocrm.ru//api/v4/contacts/{}'.format(user_id),
             headers=HEADERS,
             data=data
-        ).json()
+        )
         create_deal(request, user_id)
     except:
         response = requests.post(
@@ -109,4 +108,4 @@ def get_contact(request):
         ).json()
         user_id = response['_embedded']['contacts'][0]['id']
         create_deal(request, user_id)
-    return HttpResponse('asdf')
+    return HttpResponse('Deal created')
